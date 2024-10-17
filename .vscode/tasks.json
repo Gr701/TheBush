@@ -1,0 +1,47 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                //"-mwindows",
+                "-g",
+                "-I",
+                "src/include/SDL2",
+                "-I",
+                "headers",
+                "-L",
+                "src/lib",
+                "-o",
+                "main",
+                "source/main.cpp",
+                "source/game.cpp",
+                "source/player.cpp",
+                "source/chunk.cpp",
+                "source/object.cpp",
+                "source/quickSort.cpp",
+                //"source/test.cpp",
+                "-lmingw32",
+                "-lSDL2main",
+                "-lSDL2",
+                "-lSDL2_image",
+                "-lSDL2_mixer"
+            ],
+            
+            "problemMatcher": []
+        },
+        {
+            "label": "Run",
+            "type": "shell",
+            "command": "./main",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "dependsOn": ["Build"]
+            
+        }
+    ]
+}

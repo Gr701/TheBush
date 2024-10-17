@@ -1,0 +1,11 @@
+create file with settings for example with chunkSide
+
+IDEAS:
+    bees (advokat egorov)
+    ships (advokat egorov)
+    trade (if you kill trader you get problems)
+    potions (potion craft)
+    undergound 
+    animals with different characteristics (like horses in minecraft)
+    dark city (name for location)
+    

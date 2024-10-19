@@ -14,32 +14,34 @@ Player::Player(int x, int y, int scaleFactor, SDL_Point* screenCenter, SDL_Rende
     dstRect = {screenCenter->x, screenCenter->y, 16 * scaleFactor, 17 * scaleFactor};
 }
 
-int Player::move()
-{
+int Player::move() {
 	prevX = coordinates.x;
 	prevY = coordinates.y;
 
 	SDL_PumpEvents();
 	kState = SDL_GetKeyboardState(NULL);
-
-	if (kState[SDL_SCANCODE_W])
-	{
+	if (kState[SDL_SCANCODE_W]) {
 		coordinates.y -= speed;
 	}
-	if (kState[SDL_SCANCODE_A])
-	{
+	if (kState[SDL_SCANCODE_A]) {
 		coordinates.x -= speed;
 	}
-	if (kState[SDL_SCANCODE_S])
-	{
+	if (kState[SDL_SCANCODE_S]) {
 		coordinates.y += speed;
 	}
-	if (kState[SDL_SCANCODE_D])
-	{
+	if (kState[SDL_SCANCODE_D]) {
 		coordinates.x += speed;
 	}
-	if (prevX == coordinates.x && prevY == coordinates.y) {isStay = true;} 
-	else if (prevX > coordinates.x) {isRight = false; isStay = false;} else if (prevX < coordinates.x) {isRight = true; isStay = false;} else {isStay = false;}
+	
+	if (prevX == coordinates.x && prevY == coordinates.y) {
+		isStay = true;
+	} else if (prevX > coordinates.x) {
+		isRight = false; isStay = false;
+	} else if (prevX < coordinates.x) {
+		isRight = true; isStay = false;
+	} else {
+		isStay = false;
+	}
 	return 0;
 }
 

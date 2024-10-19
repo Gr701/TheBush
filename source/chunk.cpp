@@ -13,18 +13,15 @@ Chunk::Chunk(int chunkX, int chunkY, int chunkSide, int index, SDL_Renderer* ren
 {
     srand(time(NULL) + index * 20);
 
-    if (chunkType == "forest")
-    {
+    if (chunkType == "forest") {
         int treesNumber = 10;
         int yList[treesNumber];
-        for (int i = 0; i < treesNumber; i++)
-        {
+        for (int i = 0; i < treesNumber; i++) {
             yList[i] = rand() % chunkSide + chunkSide * chunkY;
         }
         quickSort(&yList[0], 0, treesNumber - 1);
 
-        for (int i = 0; i < treesNumber; i++)
-        {
+        for (int i = 0; i < treesNumber; i++) {
             int x = rand() % chunkSide + chunkSide * chunkX;
             objects.push_back(PineTree(x, yList[i], 4, renderer)); 
         }
@@ -36,8 +33,7 @@ Chunk::Chunk(int chunkX, int chunkY, int chunkSide, int index, SDL_Renderer* ren
     
 }
 
-int Chunk::draw(SDL_Renderer* renderer, SDL_Point* player, SDL_Point* screenCenter)
-{
+int Chunk::draw(SDL_Renderer* renderer, SDL_Point* player, SDL_Point* screenCenter) {
     SDL_Rect rect = {chunkX * chunkSide - player->x + screenCenter->x, chunkY * chunkSide - player->y + screenCenter->y, chunkSide, chunkSide};
     SDL_RenderDrawRect(renderer, &rect);
     return 0;

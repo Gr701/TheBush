@@ -2,11 +2,7 @@
 
 #include "game.h"
 
-
-struct Vector2 {int x; int y;};
-
-int main (int argc, char *argv[])
-{
+int main (int argc, char *argv[]) {
     if (SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO) != 0) {
         SDL_Log("Initialize error");
     }

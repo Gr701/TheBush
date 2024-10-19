@@ -6,7 +6,8 @@
 
 Player::Player() {}
 
-Player::Player(int x, int y, int scaleFactor, SDL_Point* screenCenter, SDL_Renderer* renderer) : coordinates({x, y})
+Player::Player(int x, int y, int scaleFactor, SDL_Point* screenCenter, SDL_Renderer* renderer) 
+: coordinates({x, y}) 
 {
     SDL_Surface* surface = IMG_Load("assets/bush.png");
     texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -45,8 +46,7 @@ int Player::move() {
 	return 0;
 }
 
-int Player::draw(SDL_Renderer* renderer)
-{
+int Player::draw(SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, texture, &idleSrcRect, &dstRect);
     return 0;
 }

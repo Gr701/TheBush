@@ -4,23 +4,7 @@ using namespace std;
 
 #include "game.h"   
 
-struct Timer ///////////////////
-{
-    Uint64 previous_ticks{};
-    float elapsed_seconds{};
-
-    void tick()
-    {
-        const Uint64 current_ticks{ SDL_GetPerformanceCounter() };
-        const Uint64 delta{ current_ticks - previous_ticks };
-        previous_ticks = current_ticks;
-        static const Uint64 TICKS_PER_SECOND{ SDL_GetPerformanceFrequency() };
-        elapsed_seconds = delta / static_cast<float>(TICKS_PER_SECOND);
-    }
-};
-
-Game::Game(SDL_Renderer* renderer, int FPS) : renderer(renderer) 
-{
+Game::Game(SDL_Renderer* renderer, int FPS) : renderer(renderer) {
     frameDelay = 1000/FPS;
 
     int screenWidth, screenHeight; 
@@ -47,23 +31,19 @@ int Game::start() {
         if (player.coordinates.x < 0) chunkXDifference--;
         if (player.coordinates.y < 0) chunkYDifference--;
 
-        if (chunkXDifference != 0 || chunkYDifference != 0)
-        {
+        if (chunkXDifference != 0 || chunkYDifference != 0) {
             chunkXDifference++;
             chunkYDifference++;
             currentChunkIndex = chunks[currentChunkIndex].neighborChunks[3 * chunkYDifference + chunkXDifference];
-            if (!chunks[currentChunkIndex].isFilledNeighbors)
-            {
+            if (!chunks[currentChunkIndex].isFilledNeighbors) {
                 fillNeighborChunks(&chunks[currentChunkIndex]);
             }
         }
         //
 
         //INPUT HANDLING
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
                 quit = true;
             }
         }
@@ -76,7 +56,6 @@ int Game::start() {
     return 0;
 }
 
-int testX = 0;
 int Game::draw() {
     SDL_SetRenderDrawColor(renderer, 64, 125, 91, 255); 
     SDL_RenderClear(renderer);
@@ -90,7 +69,7 @@ int Game::draw() {
         pChunk0->draw(renderer, &player.coordinates, &screenCenter);
         pChunk1->draw(renderer, &player.coordinates, &screenCenter);
         pChunk2->draw(renderer, &player.coordinates, &screenCenter);
-        
+
         int i = 0, j = 0, k = 0;
         while (i < pChunk0->objects.size() || j < pChunk1->objects.size() || k < pChunk2->objects.size()) {
             int tree0Y, tree1Y, tree2Y; 

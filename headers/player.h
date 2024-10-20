@@ -1,6 +1,8 @@
 #pragma once
 
 #include <SDL.h>
+#include <SDL_image.h>
+#include <utils.h>
 
 class Player
 {
@@ -9,11 +11,13 @@ class Player
 
         Player();
 
-        Player(int x, int y, int scaleFactor, SDL_Point* screenCenter, SDL_Renderer* renderer);
+        Player(int x, int y, int scaleFactor, const SDL_Point& screenCenter, SDL_Renderer* renderer);
 
         int move();
 
         int draw(SDL_Renderer* renderer);
+        
+        SDL_Rect collisionRect;
 
     private:
         
@@ -27,6 +31,7 @@ class Player
 
         SDL_Texture* texture;
 
-        SDL_Rect idleSrcRect = {0, 0, 16, 17};
+        SDL_Rect idleSrcRect;
         SDL_Rect dstRect;
+        
 };

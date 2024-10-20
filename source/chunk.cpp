@@ -1,10 +1,4 @@
-#include <SDL.h>
-#include <random>
-#include <time.h>
-
 #include "chunk.h"
-#include "object.h"
-#include "quickSort.h"
 
 Chunk::Chunk() {}
 
@@ -33,7 +27,7 @@ Chunk::Chunk(int chunkX, int chunkY, int chunkSide, int index, SDL_Renderer* ren
     
 }
 
-int Chunk::draw(SDL_Renderer* renderer, SDL_Point* player, SDL_Point* screenCenter) {
+const int Chunk::draw(SDL_Renderer* renderer, SDL_Point* player, SDL_Point* screenCenter) {
     SDL_Rect rect = {chunkX * chunkSide - player->x + screenCenter->x, chunkY * chunkSide - player->y + screenCenter->y, chunkSide, chunkSide};
     SDL_RenderDrawRect(renderer, &rect);
     return 0;

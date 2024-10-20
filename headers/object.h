@@ -1,28 +1,24 @@
 #pragma once
 
 #include <SDL.h>
+#include <SDL_image.h>
+#include <utils.h>
 
-class Object
-{
+class Object {
     public:
-        Object();
-        Object(int x, int y, int scaleFactor, SDL_Renderer* renderer);
+        Object(int x, int y, int scaleFactor, SDL_Renderer* renderer); 
+        int draw(SDL_Renderer* renderer, const SDL_Point& player, const SDL_Point& screenCenter);
 
-        int draw(SDL_Renderer* renderer, SDL_Point* player, SDL_Point* screenCenter);
-        
         SDL_Texture* texture;
-
         int x, y; //x and y in the world
-        int width = 29, height = 68; 
+        int width, height; 
+        SDL_Rect collistionRect;
         const char* pathToTexture;
         int scaleFactor;
 };
 
-class PineTree : public Object
-{
-    using Object::Object;
-
-    const char* pathToTexture = "assets/pineTree.png";
-    int width = 29; 
-    int height = 68;
+class PineTree : public Object {
+    /* using Object::Object; */
+    public: 
+        PineTree(int x, int y, int scaleFactor, SDL_Renderer* renderer);
 };

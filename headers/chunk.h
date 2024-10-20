@@ -2,8 +2,11 @@
 
 #include <SDL.h>
 #include <vector> 
+#include <random>
+#include <time.h>
 
 #include "object.h"
+#include "quickSort.h"
 
 class Chunk
 {
@@ -12,7 +15,7 @@ class Chunk
 
         Chunk(int chunkX, int chunkY, int chunkSide, int index, SDL_Renderer* renderer);
 
-        int draw(SDL_Renderer* renderer, SDL_Point* player, SDL_Point* screenCenter);
+        const int draw(SDL_Renderer* renderer, SDL_Point* player, SDL_Point* screenCenter);
         int drawNeighborChunks(SDL_Renderer* renderer, SDL_Point* player, SDL_Point* screenCenter);
 
         int chunkSide;

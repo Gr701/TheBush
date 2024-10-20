@@ -1,7 +1,4 @@
-#include <iostream>
-#include <cmath>
-using namespace std;
-
+#include <stdio.h>
 #include "game.h"   
 
 Game::Game(SDL_Renderer* renderer, int FPS) : renderer(renderer) {
@@ -11,7 +8,7 @@ Game::Game(SDL_Renderer* renderer, int FPS) : renderer(renderer) {
     SDL_GetRendererOutputSize(renderer, &screenWidth, &screenHeight);
     screenCenter = {screenWidth/2, screenHeight/2}; 
 
-    player = Player(0, 0, scaleFactor, &screenCenter, renderer);
+    player = Player(0, 0, scaleFactor, screenCenter, renderer);
     chunks.push_back(Chunk(0, 0, chunkSide, 0, renderer));
     currentChunkIndex = 0;
     fillNeighborChunks(&chunks[0]);
@@ -22,8 +19,6 @@ int Game::start() {
     while (!quit) {   
         //MOVE 
         player.move();
-        //
-
         //LOGIC
         //if change chunk
         int chunkXDifference = player.coordinates.x / chunkSide - chunks[currentChunkIndex].chunkX;
@@ -39,19 +34,15 @@ int Game::start() {
                 fillNeighborChunks(&chunks[currentChunkIndex]);
             }
         }
-        //
-
         //INPUT HANDLING
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
         }
-        //
-
         //DRAW
         draw();
-        //
+
     }
     return 0;
 }
@@ -60,51 +51,53 @@ int Game::draw() {
     SDL_SetRenderDrawColor(renderer, 64, 125, 91, 255); 
     SDL_RenderClear(renderer);
     //loaded chunks
+    bool isPlayerDrawn = false;
     for (int chunkLine = 0; chunkLine < 3; chunkLine++) {
-        Chunk* pChunk0 = &chunks[chunks[currentChunkIndex].neighborChunks[chunkLine * 3 + 0]]; //pointers to chunks from neigbor array of current chunk
-        Chunk* pChunk1 = &chunks[chunks[currentChunkIndex].neighborChunks[chunkLine * 3 + 1]]; // these three chunks are in one horizontal line 
-        Chunk* pChunk2 = &chunks[chunks[currentChunkIndex].neighborChunks[chunkLine * 3 + 2]];
+        Chunk& chunk0 = chunks[chunks[currentChunkIndex].neighborChunks[chunkLine * 3 + 0]]; //pointers to chunks from neigbor array of current chunk
+        Chunk& chunk1 = chunks[chunks[currentChunkIndex].neighborChunks[chunkLine * 3 + 1]]; // these three chunks are in one horizontal line 
+        Chunk& chunk2 = chunks[chunks[currentChunkIndex].neighborChunks[chunkLine * 3 + 2]];
         
+        //Drawing chunk borders
         SDL_SetRenderDrawColor(renderer, (chunkLine + 1) * 80, 30, 190, 255);
-        pChunk0->draw(renderer, &player.coordinates, &screenCenter);
-        pChunk1->draw(renderer, &player.coordinates, &screenCenter);
-        pChunk2->draw(renderer, &player.coordinates, &screenCenter);
+        chunk0.draw(renderer, &player.coordinates, &screenCenter);
+        chunk1.draw(renderer, &player.coordinates, &screenCenter);
+        chunk2.draw(renderer, &player.coordinates, &screenCenter);
 
-        int i = 0, j = 0, k = 0;
-        while (i < pChunk0->objects.size() || j < pChunk1->objects.size() || k < pChunk2->objects.size()) {
-            int tree0Y, tree1Y, tree2Y; 
-            if (i == pChunk0->objects.size()) { 
-                tree0Y = (pChunk0->chunkY + 2) * chunkSide; 
+        int i = 0, j = 0, k = 0; //iterators for each of three chunks
+        int object0Y = chunk0.objects[i].collistionRect.y + chunk0.objects[i].collistionRect.h;
+        int object1Y = chunk1.objects[j].collistionRect.y + chunk1.objects[j].collistionRect.h;
+        int object2Y = chunk2.objects[k].collistionRect.y + chunk2.objects[k].collistionRect.h;
+        
+        while (i < chunk0.objects.size() || j < chunk1.objects.size() || k < chunk2.objects.size()) {
+            if (object0Y <= object1Y && object0Y <= object2Y) {
+                drawOneObject(chunk0, i, object0Y, isPlayerDrawn);
+            } else if (object1Y <= object0Y && object1Y <= object2Y) {
+                drawOneObject(chunk1, j, object1Y, isPlayerDrawn);
             } else {
-                tree0Y = pChunk0->objects[i].y;
-            }
-            if (j == pChunk1->objects.size()) {
-                tree1Y = (pChunk1->chunkY + 2) * chunkSide;
-            } else {
-                tree1Y = pChunk1->objects[j].y;
-            }
-            if (k == pChunk2->objects.size()) {
-                tree2Y = (pChunk2->chunkY + 2) * chunkSide;
-            } else {
-                tree2Y = pChunk2->objects[k].y;
-            }
-
-            if (tree0Y <= tree1Y && tree0Y <= tree2Y) {
-                pChunk0->objects[i].draw(renderer, &player.coordinates, &screenCenter);
-                i++;
-            } else if (tree1Y <= tree0Y && tree1Y <= tree2Y) {
-                pChunk1->objects[j].draw(renderer, &player.coordinates, &screenCenter);
-                j++;
-            } else {
-                pChunk2->objects[k].draw(renderer, &player.coordinates, &screenCenter);
-                k++;
+                drawOneObject(chunk2, k, object2Y, isPlayerDrawn);
             }
         }
     }
-    player.draw(renderer);
+    //player.draw(renderer);
     SDL_RenderPresent(renderer); 
     return 0;
 }
+
+int Game::drawOneObject(Chunk& chunk, int& i, int& objectY, bool& isPLayerDrawn) {
+    if (!isPLayerDrawn && objectY > player.collisionRect.y + player.collisionRect.h) {
+        player.draw(renderer);
+        isPLayerDrawn = true;
+    }
+    chunk.objects[i].draw(renderer, player.coordinates, screenCenter);
+    i++;
+    if (i < chunk.objects.size()) {
+        objectY = chunk.objects[i].collistionRect.y + chunk.objects[i].collistionRect.h;
+    } else {
+        objectY += chunkSide << 2; //next obj Y or too big value when no more objects
+    }
+    return 0;
+}
+
 
 int Game::fillNeighborChunks(Chunk* pChunk) {
     int currentChunkX = pChunk->chunkX;

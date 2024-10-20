@@ -1,7 +1,7 @@
 #pragma once 
 
 #include <SDL.h>
-#include <vector>
+#include <cmath>
 
 #include "player.h"
 #include "chunk.h"
@@ -29,6 +29,7 @@ class Game
         SDL_Point screenCenter;
 
         int draw();
+        int drawOneObject(Chunk& chunk, int& i, int& objectY, bool& isPlayerDrawn);
 
         int fillNeighborChunks(Chunk* chunk);
         
